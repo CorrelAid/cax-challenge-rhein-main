@@ -1,0 +1,10 @@
+numpy
+matplotlib
+scipy
+pandas
+geopandas
+jupyterlab
+ipykernel
+nodejs
+datenguidepy
+ipyleaflet
