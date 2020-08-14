@@ -8,3 +8,5 @@ ipykernel
 nodejs
 datenguidepy
 ipyleaflet
+plotly
+voila
