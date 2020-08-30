@@ -49,7 +49,7 @@ fig.update_layout(legend=dict(
 # ## functions for callbacks and interactions
 # set parameters
 
-cm = linear.Blues_03 # color map for county area coloring
+cm = linear.Purples_03 # color map for county area coloring
 
 
 # Updating the bar charts on clicking a ditrict. Basic logic:
@@ -61,7 +61,7 @@ cm = linear.Blues_03 # color map for county area coloring
 def update_figure(district_id, stats_name, stats_data_frame, current_year):
     # add new stattistics
     stats_to_add = stats_data_frame[stats_data_frame['id']==district_id].copy(deep=True)
-    stats_to_add['colors'] = 'rgb(129,105,75)'
+    stats_to_add['colors'] = 'rgb(189, 112, 15)'
     stats_to_add.loc[stats_to_add['year']==current_year, 'colors'] = 'gray'
     
     bar = fig.data[1]
@@ -80,7 +80,7 @@ def update_figure(district_id, stats_name, stats_data_frame, current_year):
 def show_map(selected_stats, year):
     html = HTML('''district''')
     html.layout.margin = '-5px 5px 5px 5px'    
-    control = WidgetControl(widget=html, position='topright', max_width=230)
+    control = WidgetControl(widget=html, position='topright', min_width = 250, max_width=500)
 
     # load selected stats into choro_data_all
     choro_data_all, unit = choro_data_complete[selected_stats], units[selected_stats]
@@ -93,17 +93,17 @@ def show_map(selected_stats, year):
     update_figure('06413', selected_stats, choro_data_all, year)
     
     # set y-axis label
-    fig.update_layout(yaxis_title=f'{stat_dict[selected_stats]} [{unit}]', yaxis={'range':[0,max(choro_data_all[selected_stats])]})
+    fig.update_layout(yaxis_title=f'{stat_dict[selected_stats]} [{unit} per capita]', yaxis={'range':[0,max(choro_data_all[selected_stats])]})
     
 
     # define chropleth layer for basic geo plotting
     layer = Choropleth(geo_data=geo_data,choro_data=choro_data,colormap=cm,
-                       style={'fillOpacity': 0.65, 'dashArray': '10, 10', 'weight':1})
+                       style={'fillOpacity': 0.65, 'dashArray': '0, 0', 'weight':1})
     
     # define GeoJSON layer for click and hover event interactions
     geo_json = GeoJSON(data=geo_data,
                        style={'opacity': 0, 'dashArray': '9', 'fillOpacity': .0, 'weight': 1},
-                       hover_style={'color': 'green', 'dashArray': '0', 'fillOpacity': 0.7})
+                       hover_style={'color': 'blue', 'dashArray': '0', 'fillOpacity': 0.7})
 
     # needed for HTML update    
     for f in geo_data['features']:
@@ -112,11 +112,11 @@ def show_map(selected_stats, year):
 
     def update_html(feature,  **kwargs):
         html.value = '''
-            <h3>{}</h3><center><b>{}</b>: {} {}</center>
-        '''.format(stat_dict[selected_stats],
-                   id_to_name[feature['id']],
+            <center><p><b>{}</b>:</p> {} {} {}</center>
+        '''.format(id_to_name[feature['id']],
                    feature['value'],
-                   unit)
+                   unit,
+                  'per capita')
     
     # this function is called upon a click events and triggers figure update with the arguments passed from the map
     def update_fig_on_click(feature, **kwags):
@@ -135,9 +135,9 @@ def show_map(selected_stats, year):
     # custom made legend using min/max normalization
     min_value, max_value = min(choro_data.values()), max(choro_data.values())
     legend = LegendControl(
-          {str(min_value)+' '+str(unit): cm(0),
-          str(min_value+0.5*(max_value-min_value))+' '+str(unit): cm(.5),
-          str(max_value)+' '+str(unit): cm(1)},
+          {str(min_value)+' '+str(unit)+' per capita': cm(0), #hier
+          str(min_value+0.5*(max_value-min_value))+' '+str(unit)+' per capita': cm(.5),
+          str(max_value)+' '+str(unit)+' per capita': cm(1)},
           name= f"{stat_dict[selected_stats]} ({year})", position="bottomleft")
     m.add_control(legend)
     return HBox([m, fig])
