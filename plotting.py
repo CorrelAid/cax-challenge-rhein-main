@@ -108,8 +108,8 @@ def show_map(selected_stats, year):
     # needed for HTML update    
     for f in geo_data['features']:
         f['value'] = choro_data[f['id']] # choro_data[f['properties']['GEN']]
-    # on hover, the html text filed is updated to show properties of the hovered county
 
+    # on hover, the html text filed is updated to show properties of the hovered county
     def update_html(feature,  **kwargs):
         html.value = '''
             <center><p><b>{}</b>:</p> {} {} {}</center>
