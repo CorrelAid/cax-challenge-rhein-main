@@ -1,5 +1,5 @@
 from ipyleaflet import (Map, basemaps, WidgetControl, GeoJSON, Choropleth, LegendControl)
-from ipywidgets import HTML, widgets, HBox, VBox
+from ipywidgets import HTML, widgets, HBox, VBox, Layout
 from branca.colormap import linear
 import pandas as pd
 pd.options.plotting.backend = "plotly"
@@ -45,6 +45,8 @@ fig.update_layout(legend=dict(
     x=0.5
 ));
 
+html = HTML('''<center>hover of a district<br>for more information</center>''')
+html.layout.margin = '-5px 5px 5px 5px'   
 
 # ## functions for callbacks and interactions
 # set parameters
@@ -77,9 +79,7 @@ def update_figure(district_id, stats_name, stats_data_frame, current_year):
 
     fig.update_layout(title=f"{fig.data[0].name} vs. {fig.data[1].name}", template='plotly_white')
 
-def show_map(selected_stats, year):
-    html = HTML('''district''')
-    html.layout.margin = '-5px 5px 5px 5px'    
+def show_map(selected_stats, year): 
     control = WidgetControl(widget=html, position='topright', min_width = 250, max_width=500)
 
     # load selected stats into choro_data_all
@@ -140,4 +140,4 @@ def show_map(selected_stats, year):
           str(max_value)+' '+str(unit)+' per capita': cm(1)},
           name= f"{stat_dict[selected_stats]} ({year})", position="bottomleft")
     m.add_control(legend)
-    return HBox([m, fig])
+    return HBox([m, fig], layout=Layout(width='85%'))
