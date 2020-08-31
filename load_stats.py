@@ -12,7 +12,6 @@ def get_population_all_years():
     '''
     Returns pop [dataframe]: the population for all Hesse regions from datenguide.py with columns 'name', 'year', 'id' and stat values
     '''
-   
     selected_stats = 'BEVSTD' # Bevölkerungsstand (population statistic)
     selected_stats1 = 'R12411' # Fortschreibung des Bevölkerungsstandes (forward projection of populatin statistic)
     
