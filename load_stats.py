@@ -50,7 +50,7 @@ def get_data_all_years(selected_stats=selected_stats, norm=0, pop=pop):
 
     if norm != 0:
         # Normalize dataframe data here by modifying selected_stats with the population dataframe
-        df = pd.merge(data, pop)
+        df = pd.merge(data, pop, how='left')
         df[[selected_stats]] = df[selected_stats] / df['BEVSTD'] * norm
     
         data = df[['name', 'year', 'id', selected_stats]]
@@ -87,7 +87,7 @@ for f in geojson_data['features']:
 
 # # define and load all statistics that will be available in the app
 stat_ids = ['AI1903', 'AI1904', 'BEV083']
-normalize = [0, 0, 1000]
+normalize = [0, 1, 1000]
 stat_descriptions = [get_statistics_description(si) for si in stat_ids]
 stat_tuple = tuple(zip(stat_descriptions, stat_ids))
 stat_dict = dict((y, x) for x, y in stat_tuple)
@@ -97,6 +97,6 @@ for ix in range(len(stat_ids)):
     st = stat_ids[ix]
     norm = normalize[ix]
     choro_data_complete[st], units[st] = get_data_all_years(st, norm, pop)
-        
+
 c = choro_data_complete[stat_ids[0]] # take one statistics data set for generating name/id mapping
 id_to_name = {ids: c.loc[c['id']==ids, 'name'][0] for ids in c['id'].unique()}

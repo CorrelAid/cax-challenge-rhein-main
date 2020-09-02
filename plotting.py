@@ -135,9 +135,11 @@ def show_map(selected_stats, year):
     # custom made legend using min/max normalization
     min_value, max_value = min(choro_data.values()), max(choro_data.values())
     legend = LegendControl(
-          {str(min_value)+' '+str(unit)+' per capita': cm(0), #hier
-          str(min_value+0.5*(max_value-min_value))+' '+str(unit)+' per capita': cm(.5),
-          str(max_value)+' '+str(unit)+' per capita': cm(1)},
+          {f"{min_value:g} {unit}  per capita": cm(0), #hier
+          f"{min_value+0.5*(max_value-min_value):g} {unit}  per capita": cm(.5),
+          f"{max_value:g} {unit}  per capita": cm(1)},
           name= f"{stat_dict[selected_stats]} ({year})", position="bottomleft")
     m.add_control(legend)
     return HBox([m, fig], layout=Layout(width='85%'))
+
+    
