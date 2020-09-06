@@ -45,17 +45,18 @@ fig.update_layout(legend=dict(
     x=0.5
 ));
 
-html = HTML('''<center>hover of a district<br>for more information</center>''')
-html.layout.margin = '-5px 5px 5px 5px'   
+# Textbox in the top-right corner of the map with current district and value
+districtbox = HTML('''<center>hover over a district<br>for more information</center>''')
+districtbox.layout.margin = '-5px 5px 5px 5px'
 
 # ## functions for callbacks and interactions
 # set parameters
 
-cm = linear.Purples_03 # color map for county area coloring
+cm = linear.Purples_03 # color map for district area coloring
 
 
 # Updating the bar charts on clicking a ditrict. Basic logic:
-# - `fig.data` contains 2 entries, one for each county to be shown (1st is more recently clicked)
+# - `fig.data` contains 2 entries, one for each district to be shown (1st is more recently clicked)
 # - after clicking, new stats is passed via arguments `district_id, stats_name, stats_data_frame, current_year`
 # - assign: new stats instead of oldest data; most recent data take place of previously old data **needs refinement!**
 # - bar layout properties are updated accordingly
@@ -80,7 +81,7 @@ def update_figure(district_id, stats_name, stats_data_frame, current_year):
     fig.update_layout(title=f"{fig.data[0].name} vs. {fig.data[1].name}", template='plotly_white')
 
 def show_map(selected_stats, year): 
-    control = WidgetControl(widget=html, position='topright', min_width = 250, max_width=500)
+    control = WidgetControl(widget=districtbox, position='topright', min_width = 250, max_width=500)
 
     # load selected stats into choro_data_all
     choro_data_all, unit = choro_data_complete[selected_stats], units[selected_stats]
@@ -105,23 +106,18 @@ def show_map(selected_stats, year):
                        style={'opacity': 0, 'dashArray': '9', 'fillOpacity': .0, 'weight': 1},
                        hover_style={'color': 'blue', 'dashArray': '0', 'fillOpacity': 0.7})
 
-    # needed for HTML update    
+    # needed for districtbox update    
     for f in geo_data['features']:
         f['value'] = choro_data[f['id']] # choro_data[f['properties']['GEN']]
 
-    # on hover, the html text filed is updated to show properties of the hovered county
-    def update_html(feature,  **kwargs):
-        html.value = '''
-            <center><p><b>{}</b>:</p> {} {} {}</center>
-        '''.format(id_to_name[feature['id']],
-                   feature['value'],
-                   unit,
-                  'per capita')
-    
+    # on hover, the districtbox is updated to show properties of the hovered district
+    def update_districtbox(feature,  **kwargs):
+        districtbox.value = f'<center><p><b>{id_to_name[feature["id"]]}</b>:</p> {feature["value"]:g} {unit} {"per capita"}</center>'
+
     # this function is called upon a click events and triggers figure update with the arguments passed from the map
     def update_fig_on_click(feature, **kwags):
         update_figure(feature['id'], selected_stats, choro_data_all, year)
-    geo_json.on_hover(update_html)
+    geo_json.on_hover(update_districtbox)
     geo_json.on_click(update_fig_on_click)
 
     # add layers and controls; set layout parameters

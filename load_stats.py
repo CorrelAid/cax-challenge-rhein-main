@@ -27,7 +27,9 @@ def get_population_all_years():
     
     return pop
 
+# Occasional database error when querying BEVSTD or others ('code': 'INTERNAL_SERVER_ERROR')
 pop = get_population_all_years()
+#pop = pd.DataFrame() # Use this line in case the previous last line is commented-out
 
 def get_data_all_years(selected_stats=selected_stats, norm=0, pop=pop):
     '''
@@ -86,12 +88,25 @@ for f in geojson_data['features']:
 
 
 # # define and load all statistics that will be available in the app
-stat_ids = ['AI1903', 'AI1904', 'BEV083']
-normalize = [0, 1, 1000]
+
+# 0 stats for tests:
+#stat_ids = ['AI1903', 'AI1904', 'BEV083']
+#normalize = [0, 1, 1000]
+
+# 1 Environmental:
+stat_ids = ['AI1301', 'AI1902', 'AI1903', 'AI1905', 'AI1901', 'AI1904']
+# only without normalization
+normalize = listofzeros = [0] * len(stat_ids)
+
+# 2 Population:
+#stat_ids = ['AI0701', 'BEV083', 'BEV084', 'BEV085', 'BEV086']
+#normalize = [0,        1000,     1000,      1000,     1000]
+
 stat_descriptions = [get_statistics_description(si) for si in stat_ids]
 stat_tuple = tuple(zip(stat_descriptions, stat_ids))
 stat_dict = dict((y, x) for x, y in stat_tuple)
 
+norm = 0
 choro_data_complete, units = dict(), dict()
 for ix in range(len(stat_ids)):
     st = stat_ids[ix]
