@@ -92,6 +92,10 @@ def show_map(selected_stats, year):
     # initialize bar chart with Frankfurt vs Offenbach
     update_figure('06412', selected_stats, choro_data_all, year)
     update_figure('06413', selected_stats, choro_data_all, year)
+
+    # initialize districtbox
+    ffm, ffm_values = id_to_name['06413'], choro_data['06413']
+    districtbox.value = f'<center><p><b>{ffm}</b>:</p> {ffm_values:g} {unit} {"per capita"}</center>'
     
     # set y-axis label
     fig.update_layout(yaxis_title=f'{stat_dict[selected_stats]} [{unit} per capita]', yaxis={'range':[0,max(choro_data_all[selected_stats])]})
