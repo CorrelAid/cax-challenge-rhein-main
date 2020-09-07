@@ -110,12 +110,9 @@ def show_map(selected_stats, year):
                        style={'opacity': 0, 'dashArray': '9', 'fillOpacity': .0, 'weight': 1},
                        hover_style={'color': 'blue', 'dashArray': '0', 'fillOpacity': 0.7})
 
-    # needed for districtbox update    
-    for f in geo_data['features']:
-        f['value'] = choro_data[f['id']] # choro_data[f['properties']['GEN']]
-
     # on hover, the districtbox is updated to show properties of the hovered district
     def update_districtbox(feature,  **kwargs):
+        feature['value'] = choro_data[feature['id']]
         districtbox.value = f'<center><p><b>{id_to_name[feature["id"]]}</b>:</p> {feature["value"]:g} {unit} {"per capita"}</center>'
 
     # this function is called upon a click events and triggers figure update with the arguments passed from the map

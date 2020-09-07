@@ -15,11 +15,16 @@ def get_population_all_years():
     selected_stats = 'BEVSTD' # Bevölkerungsstand (population statistic)
     selected_stats1 = 'R12411' # Fortschreibung des Bevölkerungsstandes (forward projection of populatin statistic)
     
-    q = Query.all_regions(parent='06')
-    stat = q.add_field(selected_stats)
-    stat.add_args({'statistics' : selected_stats1}) # One more level in this stat (exact source of the stat)
+    for _ in range(3):
+        try:
+            q = Query.all_regions(parent='06')
+            stat = q.add_field(selected_stats)
+            stat.add_args({'statistics' : selected_stats1}) # One more level in this stat (exact source of the stat)
 
-    pop = q.results(verbose_enums=True, add_units = True)
+            pop = q.results(verbose_enums=True, add_units = True)
+        except:
+            continue
+        
     # for some reason entries are produced twice; remove them
     pop.drop_duplicates(inplace=True)
     
@@ -41,10 +46,16 @@ def get_data_all_years(selected_stats=selected_stats, norm=0, pop=pop):
     norm [int]: 0 if no normalization requested, else normalization by population and multiplied by factor norm
     pop [datafram]: dataframe with the population of all Hesse regions
     '''
-    q = Query.all_regions(parent='06')
-    stat = q.add_field(selected_stats)
+    for _ in range(3):
+        try:
+            q = Query.all_regions(parent='06')
+            stat = q.add_field(selected_stats)
 
-    data = q.results(verbose_enums=True, add_units = True)
+            data = q.results(verbose_enums=True, add_units = True)
+            break
+        except:
+            continue
+
     # for some reason entries are produced twice; remove them
     data.drop_duplicates(inplace=True)
     
