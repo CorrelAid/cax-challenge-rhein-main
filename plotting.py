@@ -16,6 +16,8 @@ from load_stats import (stat_ids, stat_tuple, stat_dict, id_to_name,
 
 # define dropdown widgets for stats and year
 
+norm_unit = "(per capita/%)" # normalized unit
+
 stats_widget = widgets.Dropdown(
     options=stat_tuple,
     value= stat_ids[0],
@@ -94,11 +96,11 @@ def show_map(selected_stats, year):
     update_figure('06413', selected_stats, choro_data_all, year)
 
     # initialize districtbox
-    ffm, ffm_values = id_to_name['06413'], choro_data['06413']
-    districtbox.value = f'<center><p><b>{ffm}</b>:</p> {ffm_values:g} {unit} {"per capita"}</center>'
+    loading_name, loading_values = id_to_name['06413'], choro_data['06413']
+    districtbox.value = f'<center><p><b>{loading_name}</b>:</p> {loading_values:g} {unit} {norm_unit}</center>'
     
     # set y-axis label
-    fig.update_layout(yaxis_title=f'{stat_dict[selected_stats]} [{unit} per capita]', yaxis={'range':[0,max(choro_data_all[selected_stats])]})
+    fig.update_layout(yaxis_title=f'{stat_dict[selected_stats]} [{unit} {norm_unit}]', yaxis={'range':[0,max(choro_data_all[selected_stats])]})
     
 
     # define chropleth layer for basic geo plotting
@@ -113,7 +115,7 @@ def show_map(selected_stats, year):
     # on hover, the districtbox is updated to show properties of the hovered district
     def update_districtbox(feature,  **kwargs):
         feature['value'] = choro_data[feature['id']]
-        districtbox.value = f'<center><p><b>{id_to_name[feature["id"]]}</b>:</p> {feature["value"]:g} {unit} {"per capita"}</center>'
+        districtbox.value = f'<center><p><b>{id_to_name[feature["id"]]}</b>:</p> {feature["value"]:g} {unit} {norm_unit}</center>'
 
     # this function is called upon a click events and triggers figure update with the arguments passed from the map
     def update_fig_on_click(feature, **kwags):
@@ -132,9 +134,9 @@ def show_map(selected_stats, year):
     # custom made legend using min/max normalization
     min_value, max_value = min(choro_data.values()), max(choro_data.values())
     legend = LegendControl(
-          {f"{min_value:g} {unit}  per capita": cm(0), #hier
-          f"{min_value+0.5*(max_value-min_value):g} {unit}  per capita": cm(.5),
-          f"{max_value:g} {unit}  per capita": cm(1)},
+          {f"{min_value:g} {unit}  {norm_unit}": cm(0), #hier
+          f"{min_value+0.5*(max_value-min_value):g} {unit}  {norm_unit}": cm(.5),
+          f"{max_value:g} {unit}  {norm_unit}": cm(1)},
           name= f"{stat_dict[selected_stats]} ({year})", position="bottomleft")
     m.add_control(legend)
     return HBox([m, fig], layout=Layout(width='85%'))

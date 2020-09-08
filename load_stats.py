@@ -6,7 +6,7 @@ from datenguidepy import get_statistics, Query
 
 # default values (for testing)
 selected_stats = 'AI1903'
-year = 2013
+year = 2018
 
 def get_population_all_years():
     '''
@@ -15,13 +15,14 @@ def get_population_all_years():
     selected_stats = 'BEVSTD' # Bevölkerungsstand (population statistic)
     selected_stats1 = 'R12411' # Fortschreibung des Bevölkerungsstandes (forward projection of populatin statistic)
     
-    for _ in range(3):
+    for _ in range(3): # Database may throw an error on the first query try
         try:
             q = Query.all_regions(parent='06')
             stat = q.add_field(selected_stats)
             stat.add_args({'statistics' : selected_stats1}) # One more level in this stat (exact source of the stat)
 
             pop = q.results(verbose_enums=True, add_units = True)
+            break
         except:
             continue
         
@@ -46,7 +47,8 @@ def get_data_all_years(selected_stats=selected_stats, norm=0, pop=pop):
     norm [int]: 0 if no normalization requested, else normalization by population and multiplied by factor norm
     pop [datafram]: dataframe with the population of all Hesse regions
     '''
-    for _ in range(3):
+    
+    for _ in range(3): # Database may throw an error on the first query try
         try:
             q = Query.all_regions(parent='06')
             stat = q.add_field(selected_stats)
@@ -100,16 +102,16 @@ for f in geojson_data['features']:
 
 # # define and load all statistics that will be available in the app
 
-# 0 stats for tests:
+# 0. stats for tests:
 #stat_ids = ['AI1903', 'AI1904', 'BEV083']
 #normalize = [0, 1, 1000]
 
-# 1 Environmental:
-stat_ids = ['AI1301', 'AI1902', 'AI1903', 'AI1905', 'AI1901', 'AI1904']
+# 1. Environmental
+stat_ids = ['AI1301', 'AI0106', 'AI0107', 'AI0109', 'AI0113', 'AI1902', 'AI1903', 'AI1905', 'AI1901', 'AI1904']
 # only without normalization
 normalize = listofzeros = [0] * len(stat_ids)
 
-# 2 Population:
+# 2. Population:
 #stat_ids = ['AI0701', 'BEV083', 'BEV084', 'BEV085', 'BEV086']
 #normalize = [0,        1000,     1000,      1000,     1000]
 
