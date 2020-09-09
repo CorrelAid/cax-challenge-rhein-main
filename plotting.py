@@ -26,7 +26,7 @@ stats_widget = widgets.Dropdown(
 )
 
 year_widget = widgets.Dropdown(
-    options= range(2010,2019),
+    options= range(2016, 2018 +1),
     value=2018,
     description='year:',
     disabled=False,
