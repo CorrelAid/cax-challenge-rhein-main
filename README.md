@@ -8,6 +8,11 @@ You can **start Datenguide viz** as a standalone application via binder here. If
 
 [![launch binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/CorrelAid/cax-challenge-rhein-main/master?urlpath=%2Fvoila%2Frender%2Fnotebooks%2Fapp.ipynb)
 
+If the application should not start (we experienced server issues in the past) please follow this link instead to run the app in a jupyter notebook.  
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/CorrelAid/cax-challenge-rhein-main/master?filepath=notebooks%2Fapp.ipynb)
+
+## Preview (non-interactive)
+
 ![Datenguide viz preview](img/datenguide-viz-example-Hesse.png)
 
 ## CorrelAidX Challenge 2020
